@@ -53,24 +53,24 @@ int aleatorio(int indice,int limite){	//(indice do vetor, numero maximo a ser ge
 
     do{ //Executa o algoritmo pelo menos uma vez antes de verificar a condicao do 'while'
         
-		random[i] = rand() % limite; // sorteia um número
+		random[i] = rand() % limite; // sorteia um nÃºmero
         igual = 0;
-        for(j = 0; j < i; j++){ // percorre a parte do vetor já preenchida
+        for(j = 0; j < i; j++){ // percorre a parte do vetor jÃ¡ preenchida
             if(random[j] == random[i])
-                igual = 1; // número repetido
+                igual = 1; // nÃºmero repetido
         }
 
-        if(igual == 0) // significa que o elemento não se repetiu
+        if(igual == 0) // significa que o elemento nÃ£o se repetiu
             i++;
-    }while(i < limite); // enquanto não for sorteado números diferentes
+    }while(i < limite); // enquanto nÃ£o for sorteado nÃºmeros diferentes
 
 	return random[indice];
 }
 
 //Verifica se a letra informada ja foi usada anteriormente
-int verificar(char letra, array papel[],int limite ){
+int verificar(char letra, array papel[],int rodada){
 	
-	for(int i = 0;i <= limite;i++){
+	for(int i = 0;i <= rodada;i++){
 		if(letra == papel[i].letra){
 			return -1;
 		}
@@ -79,7 +79,7 @@ int verificar(char letra, array papel[],int limite ){
 }
 
 //Funcao para deixar a palavra em minusculo
-char minus(char palavra[]){
+char minus(char *palavra){
 	int i = 0;
 	int largura = ( sizeof palavra ) / ( sizeof palavra[0] );
 	
@@ -91,8 +91,15 @@ char minus(char palavra[]){
 	
 }
 
-char tabela(char letra, array *papel, int param){
-
+//Funcao para verificar se a palavra digitada e valida
+int verificarVal(char auxS[], array papel[], int rodada){
+	
+	while(toupper(auxS[0]) != papel[rodada].letra && strcmp(auxS, "0") != 0){
+		printf("\nPalavra com letra nao correspondente!");
+		gets(auxS);
+		fflush(stdin);
+	}
+	
 }
 
 int main(){
@@ -102,6 +109,9 @@ int main(){
 	char auxC[7],auxS[CTRS];
 	
 	array papel[26];
+	
+	//https://www.alura.com.br/artigos/limpando-lixo-da-memoria-em-c
+	memset(&papel, 0, sizeof(papel));	//(&variavel, 0, sizeof(SUA_STRUCT))
 	
 	while(rodada == 0){
 		//Reinicializacao das variaveis
@@ -163,141 +173,117 @@ int main(){
 		}
 		auxInt = 0;
 		
-		system("pause");
-		system("cls");
+		for(i = 0;i <= 8; i++){
 		
-		printf("\nTabela:\n\n 1-Nome:\n\n 2-Cor:\n\n 3-Comida:\n\n 4-Objeto:\n\n 5-Animal:\n\n 6-CEP:\n\n 7-Famoso:\n\n 8-FSN:\n\n");
-		printf("%c",papel[rodada].letra);
-		
-		printf("Digite a categoria ou numero a ser preenchida: ");
-		gets(auxC); //Leitura da classe/numero
-		fflush(stdin);
-		
-		//Condicao para preencher o campo de Nome
-		if(strcmp(auxC, "nome") == 0 || auxC == "1"){
+			system("pause");
+			system("cls");
 			
-			printf("%s >>",auxC);
-			gets(auxS); //Leitura do substantivo
+			printf("Apenas palavras com: %c",papel[rodada].letra);
+			printf("\nTabela:\n\n 1-Nome:%s\n\n 2-Cor:%s\n\n 3-Comida:%s\n\n 4-Objeto:%s\n\n 5-Animal:%s\n\n 6-CEP:%s\n\n 7-Famoso:%s\n\n 8-FSN:%s\n\n", papel[rodada].nome, papel[rodada].cor, papel[rodada].comida, papel[rodada].objeto, papel[rodada].animal, papel[rodada].cep, papel[rodada].famoso, papel[rodada].fsn);
 			
-			while(toupper(auxS[0]) != papel[rodada].letra){
-				printf("\nPalavra com letra nao correspondente!");
-				scanf("%s",auxS);
+			printf("\nDigite a categoria ou numero a ser preenchida: ");
+			gets(auxC); //Leitura da classe/numero
+			//scanf()
+			fflush(stdin);
+			
+			//Condicao para preencher o campo de Nome
+			if(strcmp(auxC, "nome") == 0 || strcmp(auxC, "1") == 0){
+				
+				printf("%s >>",auxC);
+				gets(auxS); //Leitura do substantivo
+				//scanf("%23[^\n]s",&auxS);
 				fflush(stdin);
+				
+				verificarVal(auxS, papel, rodada);
+				
+				strcpy(papel[rodada].nome, auxS);
+			}
+			//Condicao para preenche o campo de Cor
+			else if(strcmp(auxC, "cor") == 0 || strcmp(auxC, "2") == 0){
+				
+				printf("%s >>",auxC);
+				gets(auxS); //Leitura do substantivo
+				fflush(stdin);
+				
+				verificarVal(auxS, papel, rodada);
+				
+				strcpy(papel[rodada].cor, auxS);	
+			}
+			//Condicao para preenche o campo de Comida
+			else if(strcmp(auxC, "comida") == 0 || strcmp(auxC, "3") == 0){
+				
+				printf("%s >>",auxC);
+				gets(auxS); //Leitura do substantivo
+				fflush(stdin);
+			
+				verificarVal(auxS, papel, rodada);
+				
+				strcpy(papel[rodada].comida, auxS);	
 			}
 			
-			strcpy(papel[rodada].nome, auxS);
-		}
-		//Condicao para preenche o campo de Cor
-		else if(strcmp(auxC, "cor") == 0 || auxC == "2"){
-			
-			printf("%s >>",auxC);
-			gets(auxS); //Leitura do substantivo
-			
-			while(toupper(auxS[0]) != papel[rodada].letra){
-				printf("\nPalavra com letra nao correspondente!");
-				scanf("%s",auxS);
+			//Condicao para preenche o campo de Objeto
+			else if(strcmp(auxC, "objeto") == 0 || strcmp(auxC, "4") == 0){
+				
+				printf("%s >>",auxC);
+				gets(auxS); //Leitura do substantivo
 				fflush(stdin);
+				
+				verificarVal(auxS, papel, rodada);
+				
+				strcpy(papel[rodada].objeto, auxS);
 			}
 			
-			strcpy(papel[rodada].cor, auxS);	
-		}
-		//Condicao para preenche o campo de Comida
-		else if(strcmp(auxC, "comida") == 0 || auxC == "3"){
-			
-			printf("%s >>",auxC);
-			gets(auxS); //Leitura do substantivo
-		
-			while(toupper(auxS[0]) != papel[rodada].letra){
-				printf("\nPalavra com letra nao correspondente!");
-				scanf("%s",auxS);
+			//Condicao para preenche o campo de Animal
+			else if(strcmp(auxC, "animal") == 0 || strcmp(auxC, "5") == 0){
+				printf("%s >>",auxC);
+				gets(auxS); //Leitura do substantivo
 				fflush(stdin);
+				
+				verificarVal(auxS, papel, rodada);
+				
+				strcpy(papel[rodada].animal, auxS);
 			}
 			
-			strcpy(papel[rodada].comida, auxS);	
-		}
-		
-		//Condicao para preenche o campo de Objeto
-		else if(strcmp(auxC, "objeto") == 0 || auxC == "4"){
-			
-			printf("%s >>",auxC);
-			gets(auxS); //Leitura do substantivo
-			
-			
-			while(toupper(auxS[0]) != papel[rodada].letra){
-				printf("\nPalavra com letra nao correspondente!");
-				scanf("%s",auxS);
+			//Condicao para preenche o campo de CEP
+			else if(strcmp(auxC, "cep") == 0 || strcmp(auxC, "6") == 0){
+				printf("%s >>",auxC);
+				gets(auxS); //Leitura do substantivo
 				fflush(stdin);
+				
+				verificarVal(auxS, papel, rodada);
+				
+				strcpy(papel[rodada].cep, auxS);
+			}
+			//Condicao para preenche o campo de Famoso
+			else if(strcmp(auxC, "famoso") == 0 || strcmp(auxC, "7") == 0){
+				printf("%s >>",auxC);
+				gets(auxS); //Leitura do substantivo
+				fflush(stdin);
+				
+				verificarVal(auxS, papel, rodada);
+				
+				strcpy(papel[rodada].famoso, auxS);
+			}
+			//Condicao para preenche o campo de F.S.N
+			else if(strcmp(auxC, "fsn") == 0 || strcmp(auxC, "8") == 0){
+				printf("%s >>",auxC);
+				gets(auxS); //Leitura do substantivo
+				fflush(stdin);
+				
+				verificarVal(auxS, papel, rodada);
+				
+				strcpy(papel[rodada].fsn, auxS);
+			}
+			else{
+				printf("Essa categoria nao existe!");
 			}
 			
-			strcpy(papel[rodada].objeto, auxS);
-		}
-		
-		//Condicao para preenche o campo de Animal
-		else if(strcmp(auxC, "animal") == 0 || auxC == "5"){
-			printf("%s >>",auxC);
-			gets(auxS); //Leitura do substantivo
+			printf("Digitaste: %s, %s", auxC, auxS);
 			
-			
-			while(toupper(auxS[0]) != papel[rodada].letra){
-				printf("\nPalavra com letra nao correspondente!");
-				scanf("%s",auxS);
-				fflush(stdin);
-			}
-			
-			strcpy(papel[rodada].animal, auxS);
-		}
-		
-		//Condicao para preenche o campo de CEP
-		else if(strcmp(auxC, "cep") == 0 || auxC == "6"){
-			printf("%s >>",auxC);
-			gets(auxS); //Leitura do substantivo
-			
-			
-			while(toupper(auxS[0]) != papel[rodada].letra){
-				printf("\nPalavra com letra nao correspondente!");
-				scanf("%s",auxS);
-				fflush(stdin);
-			}
-			
-			strcpy(papel[rodada].cep, auxS);
-		}
-		//Condicao para preenche o campo de Famoso
-		else if(strcmp(auxC, "famoso") == 0 || auxC == "7"){
-			printf("%s >>",auxC);
-			gets(auxS); //Leitura do substantivo
-			
-			
-			while(toupper(auxS[0]) != papel[rodada].letra){
-				printf("\nPalavra com letra nao correspondente!");
-				scanf("%s",auxS);
-				fflush(stdin);
-			}
-			
-			strcpy(papel[rodada].famoso, auxS);
-		}
-		//Condicao para preenche o campo de F.S.N
-		else if(strcmp(auxC, "fsn") == 0 || auxC == "8"){
-			printf("%s >>",auxC);
-			gets(auxS); //Leitura do substantivo
-			
-			
-			while(toupper(auxS[0]) != papel[rodada].letra){
-				printf("\nPalavra com letra nao correspondente!");
-				scanf("%s",auxS);
-				fflush(stdin);
-			}
-			
-			strcpy(papel[rodada].fsn, auxS);
-		}
-		else{
-			printf("Essa categoria nao existe!");
 		}
 		
-		printf("Digitaste: %s, %s", auxC, auxS);
-			
 		rodada++;
 	}
 	
 	return 0;
 }
-
